@@ -78,6 +78,10 @@ http://localhost:5000
 - **shortid** - Generate short and unique URL IDs
 
 ---
+## Docker
+- Use **Master** branch for dockerize code
+
+---
 
 ### 📧 Contact
 If you have any questions, feel free to reach out!
