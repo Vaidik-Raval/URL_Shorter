@@ -9,7 +9,7 @@ require('dotenv').config();
 const app = express();
 
 
-connMongo(process.env.Mongo).then(()=>console.log("mango connected"));
+connMongo(process.env.Mongo || 'mongodb://localhost:27017/shorturl').then(()=>console.log("mango connected"));
 const cors = require('cors');
 app.use(cors());
 app.set('view engine', 'ejs');
@@ -55,7 +55,7 @@ app.get('/:shortId',async(req,res)=>{
 //     res.send("hello");
 // });
 
-app.listen(process.env.PORT,()=> console.log(`server strarted at port ${process.env.PORT}`));
+app.listen(process.env.PORT|| 5000,()=> console.log(`server strarted at port ${process.env.PORT}`));
 
 // catch 404 and forward to error handler
 

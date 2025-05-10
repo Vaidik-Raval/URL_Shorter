@@ -5,27 +5,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>URL Shortener</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
 
     <style>
+        :root {
+            --accent-primary: #FF5F9E;
+            --accent-secondary: #AC4DFF;
+            --text-primary: #FFFFFF;
+            --text-secondary: #C8C5FF;
+            --bg-card: rgba(13, 12, 34, 0.85);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Poppins', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background: linear-gradient(135deg, #9bc7bb, #f7c1a0);
+            min-height: 100vh;
             margin: 0;
+            color: var(--text-primary);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800' viewBox='0 0 800 800'%3E%3Crect fill='%23000B1E' width='800' height='800'/%3E%3Cg fill-opacity='0.15'%3E%3Ccircle fill='%23000B1E' cx='400' cy='400' r='600'/%3E%3Ccircle fill='%23000e2a' cx='400' cy='400' r='500'/%3E%3Ccircle fill='%23001236' cx='400' cy='400' r='400'/%3E%3Ccircle fill='%23001743' cx='400' cy='400' r='300'/%3E%3Ccircle fill='%23001c51' cx='400' cy='400' r='200'/%3E%3Ccircle fill='%2300205F' cx='400' cy='400' r='100'/%3E%3C/g%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Anime-style stars */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 4px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 4px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: -1;
+            animation: starsMove 200s linear infinite;
+        }
+        
+        @keyframes starsMove {
+            from {
+                background-position: 0 0, 40px 60px, 130px 270px;
+            }
+            to {
+                background-position: 550px 550px, 390px 410px, 380px 520px;
+            }
+        }
+
+        .sakura {
+            position: absolute;
+            background-color: rgba(255, 183, 197, 0.7);
+            border-radius: 12px 1px 12px 1px;
+            width: 12px;
+            height: 12px;
+            z-index: -1;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% {
+                opacity: 0.7;
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(100px, 1000px) rotate(720deg) scale(0.3);
+            }
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
-            width: 450px;
+            background: var(--bg-card);
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
             text-align: center;
-            animation: fadeIn 1s ease-in-out;
+            animation: fadeIn 0.8s ease-out;
+            border: 1px solid rgba(172, 77, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -150%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right, 
+                rgba(255, 95, 158, 0.15), 
+                rgba(172, 77, 255, 0.1),
+                rgba(77, 213, 255, 0.1)
+            );
+            transform: rotate(30deg);
+            z-index: -1;
+            pointer-events: none;
         }
 
         @keyframes fadeIn {
@@ -40,84 +132,266 @@
         }
 
         h2 {
-            margin-bottom: 15px;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255, 95, 158, 0.7);
         }
 
         input[type="url"] {
-            width: calc(100% - 20px);
-            padding: 12px;
-            margin: 12px 0;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: 0.3s;
+            width: 100%;
+            padding: 1rem;
+            margin: 0.75rem 0 1.25rem;
+            border: 1px solid rgba(172, 77, 255, 0.3);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: rgba(13, 12, 34, 0.6);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        input[type="url"]::placeholder {
+            color: var(--text-secondary);
         }
 
         input[type="url"]:focus {
-            border-color: #ff6b81;
+            border-color: var(--accent-primary);
             outline: none;
-            box-shadow: 0 0 8px rgba(255, 107, 129, 0.5);
+            box-shadow: 0 0 15px rgba(255, 95, 158, 0.4);
         }
 
         button {
-            background: #ffa200;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             color: white;
-            padding: 12px 20px;
+            padding: 1rem 1.5rem;
             border: none;
-            border-radius: 6px;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
+            font-size: 1rem;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0),
+                rgba(255, 255, 255, 0.3),
+                rgba(255, 255, 255, 0)
+            );
+            transform: rotate(30deg);
+            transition: 1.2s;
+            opacity: 0;
         }
 
         button:hover {
-            background: #e25565;
-            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 95, 158, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        button:hover::after {
+            animation: shine 1.5s ease;
+        }
+        
+        @keyframes shine {
+            0% {
+                opacity: 0;
+                left: -50%;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                left: 150%;
+            }
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         .result {
-            margin-top: 20px;
+            margin-top: 1.5rem;
             word-wrap: break-word;
-            padding: 10px;
-            background: #fff0f3;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1.25rem;
+            background: rgba(13, 12, 34, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(172, 77, 255, 0.2);
+            animation: slideUp 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-primary), var(--accent-secondary));
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result p {
+            margin-bottom: 0.5rem;
         }
 
         .result a {
-            color: #ff6b81;
-            font-weight: bold;
+            color: #77DDFF;
+            font-weight: 500;
             text-decoration: none;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            display: inline-block;
+            padding: 0.5rem;
+            border-radius: 8px;
+            background: rgba(77, 213, 255, 0.1);
         }
 
         .result a:hover {
             text-decoration: underline;
+            background: rgba(77, 213, 255, 0.15);
+            text-shadow: 0 0 5px rgba(77, 213, 255, 0.5);
         }
 
         .icon {
-            font-size: 24px;
-            color: #ff6b81;
+            color: var(--accent-primary);
+            filter: drop-shadow(0 0 5px rgba(255, 95, 158, 0.5));
+        }
+        
+        .copy-btn {
+            background: transparent;
+            border: 1px solid rgba(172, 77, 255, 0.3);
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            width: auto;
+            display: inline-flex;
+            font-size: 0.9rem;
+        }
+        
+        .copy-btn:hover {
+            background: rgba(172, 77, 255, 0.15);
+            border-color: rgba(172, 77, 255, 0.5);
+            transform: none;
+            box-shadow: 0 0 10px rgba(172, 77, 255, 0.3);
+        }
+        
+        /* Add anime character silhouette */
+        .anime-character {
+            position: fixed;
+            bottom: -20px;
+            right: -20px;
+            width: 250px;
+            height: 400px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 250 400'%3E%3Cpath fill='rgba(172, 77, 255, 0.15)' d='M195,340 C165,365 115,380 85,380 C55,380 40,365 40,340 C40,315 55,300 85,300 C115,300 165,315 195,340 Z M130,280 C125,285 120,290 110,290 C100,290 95,285 90,280 C85,275 80,270 80,260 C80,250 85,245 90,240 C95,235 100,230 110,230 C120,230 125,235 130,240 C135,245 140,250 140,260 C140,270 135,275 130,280 Z M170,80 C185,90 195,105 195,120 C195,135 185,150 170,160 C155,170 135,175 120,175 C105,175 85,170 70,160 C55,150 45,135 45,120 C45,105 55,90 70,80 C85,70 105,65 120,65 C135,65 155,70 170,80 Z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: bottom right;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: -1;
         }
     </style>
 </head>
 
 <body>
+    <div class="anime-character"></div>
     <div class="container">
-        <h2><i class="fas fa-cut icon"></i> URL Shortener</h2>
+        <h2><i class="fas fa-magic icon"></i> URL Shortener</h2>
 
         <form action="/url" method="POST">
             <input type="url" name="url" id="urlInput" placeholder="Enter a long URL" required>
-            <button type="submit"><i class="fas fa-compress"></i> Shorten URL</button>
+            <button type="submit"><i class="fas fa-compress-alt"></i> Shorten URL</button>
         </form>
 
         <% if(locals.id) { %>
             <div class="result">
-                <p><i class="fas fa-link"></i> Shortened URL:</p>
-                <p><a href="http://localhost:3000/<%= id %>" target="_blank">http://localhost:3000/<%= id %></a></p>
+                <p><i class="fas fa-star icon"></i> Shortened URL:</p>
+                <p><a href="http://localhost:3000/<%= id %>" target="_blank" id="shortUrl">http://localhost:3000/<%= id %></a></p>
+                <button class="copy-btn" onclick="copyToClipboard()"><i class="fas fa-copy"></i> Copy to clipboard</button>
             </div>
         <% } %>
     </div>
+
+    <script>
+        // Create sakura petals
+        function createSakura() {
+            const sakura = document.createElement('div');
+            sakura.classList.add('sakura');
+            
+            // Random position and size
+            const size = Math.random() * 15 + 5;
+            sakura.style.width = size + 'px';
+            sakura.style.height = size + 'px';
+            
+            // Random colors
+            const colors = ['rgba(255,183,197,0.7)', 'rgba(255,197,216,0.7)', 'rgba(246,173,198,0.7)'];
+            sakura.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Random position
+            sakura.style.left = Math.random() * window.innerWidth + 'px';
+            sakura.style.top = -20 + 'px';
+            
+            // Random animation duration
+            const duration = Math.random() * 8 + 5;
+            sakura.style.animationDuration = duration + 's';
+            
+            document.body.appendChild(sakura);
+            
+            // Remove after animation completes
+            setTimeout(() => {
+                sakura.remove();
+            }, duration * 1000);
+        }
+        
+        // Create sakura at intervals
+        setInterval(createSakura, 300);
+        
+        function copyToClipboard() {
+            const shortUrl = document.getElementById('shortUrl');
+            navigator.clipboard.writeText(shortUrl.href).then(() => {
+                const copyBtn = document.querySelector('.copy-btn');
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+    </script>
 </body>
 
 </html>

@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: shorturl_app
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app  # Sync local code with the container
+      - /app/node_modules  # Ignore node_modules from host
+    command: ["nodemon", "server.js"]  # Run using nodemon
+
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
