@@ -76,6 +76,11 @@ http://localhost:5000
 - **dotenv** - Manage environment variables
 - **cors** - Handle Cross-Origin requests
 - **shortid** - Generate short and unique URL IDs
+- 
+---
+
+## Docker
+- Use **Master** branch for dockerize code
 
 ---
 
